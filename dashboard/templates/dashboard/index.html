@@ -1,0 +1,74 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'dashboard/css/style_index.css' %}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar__container">
+            <div id="navbar_logo">
+                SEEMS
+            </div>
+            <div class="navbar__toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+            <ul class="navbar__menu">
+                <li class="navbar__item">
+                    <a href="" class="navbar__links" id="home-button">
+                        Month
+                    </a>
+                <li class="navbar__item">
+                    <a href="" class="navbar__links" id="calendar-button">
+                        Week
+                    </a>
+                <li class="navbar__item" >
+                    <a href="" class="navbar__links" id="chat-button">
+                        Day
+                    </a>
+                <li class="navbar__item" >
+                        <div class="navbar__links" id="chat-button">
+                            <select name="select" id="device-select">
+                                <option value="all">Entire Household</option>
+                                <option value="Device1">Device 1</option>
+                                <option value="Device2">Device 2</option>
+                                <option value="Device3">Device 3</option>
+                            </select>
+                        </div>
+            </ul>
+        </div>
+    </nav>
+
+    <div id="home-container" class="primary-container">
+        <div id="greeting-name">
+            <h1>Monthly</h1><br><br><h5 class="title-text">Total Energy Consumption: {{power}} kWh</h5>
+            
+             <br>
+             <h2><span id="date"></span></h2>
+             <script>
+                let date = "07/03/2023";
+                document.getElementById("date").innerHTML = date;
+             </script>
+                   
+                
+               
+    </div>
+
+    <div class="graphs">
+        <img src="{% static 'dashboard/images/pie_chart.jpg' %}" alt="Pie Chart" id="pie-chart">
+        <img src="{% static 'dashboard/images/grouped-bar-example-1.png' %}" alt="bar-graph" id="bar-graph">
+    </div>
+    
+
+    </div>
+</div>
+</body>
+
+</html>

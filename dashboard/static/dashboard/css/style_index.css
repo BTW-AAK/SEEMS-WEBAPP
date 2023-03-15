@@ -1,0 +1,168 @@
+@font-face {
+    font-family: "MusticaPro";
+    src:url(images/MusticaproSemibold-2OG5o.otf) format("opentype");
+  }
+@font-face {
+    font-family: "Roboto";
+    src: url(images/Roboto-Regular.ttf);
+}
+
+* {
+box-sizing: border-box;
+margin: 0;
+padding: 0;
+font-family: "MusticaPro";
+background: #2B2B2B;
+}
+
+.navbar {
+    background: #eee;
+height: 80px;
+display: flex;
+justify-content: center;
+align-items: center;
+font-size: 1.4rem;
+position: sticky;
+top: 0;
+border-bottom-left-radius: 25px;
+border-bottom-right-radius: 25px;
+z-index: 999;
+
+
+}
+
+.navbar__container{
+
+display: flex;
+justify-content: space-between;
+height: 80px;
+z-index: 1;
+width: 100%;
+max-width: 1300px;
+margin: 0 auto;
+margin-left: 900px;
+padding: 0 60px;
+color: #eee;
+background: #eee;
+}
+
+#navbar_logo{
+background-color: #eee; 
+color: #2B2B2B;
+align-items: center;
+margin-top: auto;
+margin-bottom: auto;
+cursor: crosshair;
+font-size: 30px;
+margin-left: 00px;
+}
+
+.navbar__menu {
+
+    display: flex;
+    background: #eee;
+    color: #eee;
+    align-items: center;
+    list-style: none;
+    text-align: center;
+    
+}
+
+.navbar__item {
+    height:80px;
+    background: #eee;
+    color: #eee;
+}
+
+.navbar__links {
+    color: #000;
+    background: #eee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    padding: 0 15px;
+    height: 100%;
+    
+
+}
+
+.navbar__btn {
+    display: flex;
+    background: #eee;
+    justify-content: center;
+    align-items: center;
+    padding: 0 1rem;
+    width: 100%;
+
+}
+.primary-container{
+    max-width: 1500px;
+    height: fit-content;
+    min-height: 750px;
+    margin-top: 50px;
+    margin: 50px auto auto auto;
+    background-color: #2B2B2B;
+    color: #454545;
+    border-radius: 15px;
+    z-index: 1;
+    }
+
+    
+
+    #greeting-name{
+        background-color: #454545;
+        padding-top: 50px;
+        text-align: center;
+        border-radius: 15px;
+        padding-bottom:20px;
+    }
+    
+    h1{
+        background-color: #454545;
+        color: #eee;
+        z-index: 2;
+        font-size: 70px;
+    }
+    .title-text{       
+        background-color: #454545;
+        color: #eee;
+        z-index: 2;
+        font-size: 40px;}
+    #name{
+        background-color: #454545;
+        color: #eee;
+        font-size: 70px;
+    }
+    h2 {
+        background-color: #454545;
+        color: #eee;
+        z-index: 2;
+        font-size: 25px;
+    }
+    #date{
+        padding-top: 20px;
+        background-color: #454545;
+        color: #eee;
+        font-size: 25px;
+    }
+    #device-select{
+        background-color: #454545;
+        color: #eee;
+        font-size: 20px;
+    }
+    #pie-chart{
+        display: flex;
+        background-color: #2b2b2b;
+        margin-top: 30px;
+        scale: 0.9;
+        border-radius: 15px;
+    }
+    #bar-graph{
+        display: flex;
+        background-color: #2b2b2b;
+        margin-left: 870px;
+        margin-top: -380px;
+        scale:1.5;
+        border-radius: 15px;
+    }
