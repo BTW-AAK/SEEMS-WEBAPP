@@ -22,4 +22,11 @@ class Device(models.Model):
     
 
 # device , energy consumed, starttime, end time, 
+class Consumption_Data(models.Model):
+    device_id = models.CharField(max_length=50)
+    energy = models.FloatField()
+    starttime = models.DateTimeField()
+    endtime = models.DateTimeField()
 
+    def __str__(self):
+        return f"{self.device.device_name} |{self.energy}KWh"

@@ -1,6 +1,23 @@
 import tinytuya
 import datetime
 import pytz
+import sqlite3
+
+def write_db(dbname,tablename,dev_id,enrgy,st_time,en_time ):
+    conn = sqlite3.connect(dbname)
+    cursor = conn.cursor()
+    cursor.execute('INSERT INTO dashboard_consumption_data(device_id,energy,startime,endtime) VALUES(?,?,?,?)',(dev_id,enrgy,st_time,en_time))
+    a =cursor.lastrowid
+
+    return a
+
+def update_row(*args):
+    conn = sqlite3.connect(dbname)
+    cursor = conn.cursor()
+    cursor.execute('UPDATE dashboard_consumption_data SET energy = WHERE id = ')
+    a =cursor.lastrowid
+
+    return a
 
 class Device:
     def __init__(self, device_name, device_ip, device_id, device_key, device_version):
@@ -14,6 +31,7 @@ class Device:
         self.device_status = False
         self.start_time = None
         self.end_time = None
+        self.row_no = None
 
     def initialize(self):
         try:
@@ -45,7 +63,8 @@ class Device:
             self.avg_power += power_measured
             self.device_status = True
             self.start_time = datetime.datetime.now(pytz.timezone('Asia/Kolkata'))
-            # create a new row in database
+            # write in new row
+            self.row_no = write_db(self.device_id, power_measured, self.start_time, self.start_time)
         elif current_status and self.device_status :
             self.avg_power += power_measured
             self.avg_power /=2
@@ -57,7 +76,10 @@ class Device:
             duration_in_s = duration.total_seconds()
             hours = duration_in_s/3600
             hours = round(hours,4)
-            #find energy consumption and update the row 
+            energy_consumed = self.avg_power*hours
+
+            #find energy consumption and update the row
+            update_row('db_name', 'table_name', 'rowid' self.device_id, energy_consumed, self.start_time, self.end_time)
         elif current_status == False and self.device_status ==True:
             self.device_status = False
             self.end_time =  datetime.datetime.now(pytz.timezone('Asia/Kolkata'))
@@ -69,6 +91,7 @@ class Device:
             hours = duration_in_s/3600
             hours = round(hours,4)
             # update the same row for last time
+            update_row('db_name', 'table_name', 'rowid' self.device_id, energy_consumed, self.start_time, self.end_time)
             self.avg_power = 0
 
         else:
