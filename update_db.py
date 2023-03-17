@@ -9,11 +9,14 @@ cursor.execute(sql_query)
 data = cursor.fetchall()
 devices= []
 for d in data:
-    devices.append(Device(d[2],d[1],d[3],d[4],d[5]))
+    
+    devices.append(Device(d[1],d[2],d[3],d[4],d[5]))
 
-for device in devices:
-    done = device.initialize()
-    if done:
-        device.update()
-    time.sleep(5)
+for i in range(100):
+    for device in devices:
+        done = device.initialize()
+        if done:
+            device.update()
+            time.sleep(1)
+    
     

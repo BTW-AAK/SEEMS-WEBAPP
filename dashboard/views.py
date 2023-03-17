@@ -1,13 +1,13 @@
 from django.shortcuts import render
-from .models import Consumption
+from .models import Consumption_Data
 import datetime
 # Create your views here.
 def home(request):
-    now =datetime.datetime.now()
-    objs =Consumption.objects.filter(current_date__month='03')
+    now = datetime.datetime.now()
+    objs =Consumption_Data.objects.filter(starttime__month=now.month)
     total_power = 0
     for o in objs :
-        total_power+=o.power
+        total_power+=o.energy
 
     print(total_power)
     context = {'power':total_power}

@@ -29,4 +29,4 @@ class Consumption_Data(models.Model):
     endtime = models.DateTimeField()
 
     def __str__(self):
-        return f"{self.device.device_name} |{self.energy}KWh"
+        return f"{self.device_id} |{self.energy}KWh"

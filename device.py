@@ -4,19 +4,27 @@ import pytz
 import sqlite3
 
 def write_db(dev_id,enrgy,st_time,en_time ):
+    enrgy = round(enrgy,4)
     conn = sqlite3.connect("db.sqlite3")
     cursor = conn.cursor()
-    cursor.execute('INSERT INTO dashboard_consumption_data(device_id,energy,startime,endtime) VALUES(?,?,?,?)',(dev_id,enrgy,st_time,en_time))
+    cursor.execute('INSERT INTO dashboard_consumption_data(device_id,energy,starttime,endtime) VALUES(?,?,?,?)',(dev_id,enrgy,st_time,en_time))
+    
     a =cursor.lastrowid
-
+    conn.commit()
+    cursor.close()
+    print("written, energy: ",enrgy)
     return a
 
 def update_row(row_no,dev_id,energy,st_time,en_time):
+    energy = round(energy,4)
     conn = sqlite3.connect("db.sqlite3")
     cursor = conn.cursor()
-    cursor.execute(f'UPDATE dashboard_consumption_data SET energy ={energy},endtime ={en_time} WHERE id ={row_no} ')
+    cursor.execute('UPDATE dashboard_consumption_data SET energy =?, endtime =? WHERE id =? ',(energy,en_time,row_no))
+    
     a =cursor.lastrowid
-
+    conn.commit()
+    cursor.close()
+    print("updated, energy: ",energy)
     return a
 
 class Device:
@@ -48,7 +56,7 @@ class Device:
         try:
             is_on = data['dps']['1']
         except Exception as e:
-            print(data)
+            
             print("couldn't reach device")
             print(e)
             is_on = False
@@ -57,10 +65,18 @@ class Device:
     def update(self):
         
         current_status, data = self.is_active()
-        if self.device_version == '3.1':
-            power_measured = data['dps']['5']
-        elif self.device_version == '3.3':
-            power_measured = data['dps']['19 ]']
+        
+        power_measured = 0
+        try:
+            if self.device_version == 3.1:
+                power_measured = data['dps']['5']
+            elif self.device_version == 3.3:
+                power_measured = data['dps']['19']
+        except:
+            print("dps not in data")
+            current_status = False
+        
+        power_measured /=10000  
 
         if current_status == True and self.device_status ==False:
             self.avg_power += power_measured
@@ -80,6 +96,8 @@ class Device:
                 duration = self.end_time - self.start_time
                 duration_in_s = duration.total_seconds()
                 hours = duration_in_s/3600
+                
+                
                 hours = round(hours,4)
                 energy_consumed = self.avg_power*hours
                 
