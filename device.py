@@ -3,18 +3,18 @@ import datetime
 import pytz
 import sqlite3
 
-def write_db(dbname,tablename,dev_id,enrgy,st_time,en_time ):
-    conn = sqlite3.connect(dbname)
+def write_db(dev_id,enrgy,st_time,en_time ):
+    conn = sqlite3.connect("db.sqlite3")
     cursor = conn.cursor()
     cursor.execute('INSERT INTO dashboard_consumption_data(device_id,energy,startime,endtime) VALUES(?,?,?,?)',(dev_id,enrgy,st_time,en_time))
     a =cursor.lastrowid
 
     return a
 
-def update_row(*args):
-    conn = sqlite3.connect(dbname)
+def update_row(row_no,dev_id,energy,st_time,en_time):
+    conn = sqlite3.connect("db.sqlite3")
     cursor = conn.cursor()
-    cursor.execute('UPDATE dashboard_consumption_data SET energy = WHERE id = ')
+    cursor.execute(f'UPDATE dashboard_consumption_data SET energy ={energy},endtime ={en_time} WHERE id ={row_no} ')
     a =cursor.lastrowid
 
     return a
@@ -25,7 +25,7 @@ class Device:
         self.device_ip = device_ip
         self.device_id = device_id
         self.device_key = device_key
-        self.device_version = device_version
+        self.device_version = float(device_version)
         self.controller = None
         self.avg_power = 0
         self.device_status = False
@@ -38,16 +38,19 @@ class Device:
             self.controller = tinytuya.OutletDevice(self.device_id,self.device_ip,self.device_key)
             self.controller.set_version(self.device_version)
             return True
-        except:
+        except Exception as e:
             print("device connection failed")
+            print(e)
             return False
         
     def is_active(self):
         data = self.controller.status()
         try:
             is_on = data['dps']['1']
-        except:
+        except Exception as e:
+            print(data)
             print("couldn't reach device")
+            print(e)
             is_on = False
         return is_on, data
     
@@ -64,7 +67,7 @@ class Device:
             self.device_status = True
             self.start_time = datetime.datetime.now(pytz.timezone('Asia/Kolkata'))
             # write in new row
-            self.row_no = write_db(self.device_id, power_measured, self.start_time, self.start_time)
+            self.row_no = write_db(self.device_id, 0, self.start_time, self.start_time)
         elif current_status and self.device_status :
             self.avg_power += power_measured
             self.avg_power /=2
@@ -72,26 +75,71 @@ class Device:
             day_change = False
             if self.end_time.strftime("%d") != self.start_time.strftime("%d"):
                 day_change=True
-            duration = self.end_time - self.start_time
-            duration_in_s = duration.total_seconds()
-            hours = duration_in_s/3600
-            hours = round(hours,4)
-            energy_consumed = self.avg_power*hours
+            
+            if not day_change:
+                duration = self.end_time - self.start_time
+                duration_in_s = duration.total_seconds()
+                hours = duration_in_s/3600
+                hours = round(hours,4)
+                energy_consumed = self.avg_power*hours
+                
+                #find energy consumption and update the row
+                update_row( self.row_no ,self.device_id, energy_consumed, self.start_time, self.end_time)
+            else:
 
-            #find energy consumption and update the row
-            update_row('db_name', 'table_name', 'rowid' self.device_id, energy_consumed, self.start_time, self.end_time)
+                n_end = datetime.datetime(datetime.date.today().year, datetime.date.today().month,datetime.date.today().day, 11,59,59)
+
+                #Energy from start time to n_end
+                duration = n_end - self.start_time
+                duration_in_s = duration.total_seconds()
+                hours = duration_in_s/3600
+                hours = round(hours,4)
+                energy_consumed = self.avg_power*hours
+                update_row( self.row_no ,self.device_id, energy_consumed, self.start_time, n_end)
+
+                #Energy from n_end to end time
+                duration = self.end_time-n_end
+                duration_in_s=duration.total_seconds
+                hours = duration_in_s/3600
+                hours = round(hours,4)
+                energy_consumed=self.avg_power*hours
+                self.row_no = write_db( self.device_id, energy_consumed, n_end, self.end_time)
+                
         elif current_status == False and self.device_status ==True:
             self.device_status = False
             self.end_time =  datetime.datetime.now(pytz.timezone('Asia/Kolkata'))
             day_change = False
             if self.end_time.strftime("%d") != self.start_time.strftime("%d"):
                 day_change=True
-            duration = self.end_time - self.start_time
-            duration_in_s = duration.total_seconds()
-            hours = duration_in_s/3600
-            hours = round(hours,4)
-            # update the same row for last time
-            update_row('db_name', 'table_name', 'rowid' self.device_id, energy_consumed, self.start_time, self.end_time)
+            if not day_change:
+                duration = self.end_time - self.start_time
+                duration_in_s = duration.total_seconds()
+                hours = duration_in_s/3600
+                hours = round(hours,4)
+                energy_consumed = self.avg_power*hours
+                
+                #find energy consumption and update the row
+                update_row( self.row_no ,self.device_id, energy_consumed, self.start_time, self.end_time)
+            else:
+
+                n_end = datetime.datetime(datetime.date.today().year, datetime.date.today().month,datetime.date.today().day, 11,59,59)
+
+                #Energy from start time to n_end
+                duration = n_end - self.start_time
+                duration_in_s = duration.total_seconds()
+                hours = duration_in_s/3600
+                hours = round(hours,4)
+                energy_consumed = self.avg_power*hours
+                update_row( self.row_no ,self.device_id, energy_consumed, self.start_time, n_end)
+
+                #Energy from n_end to end time
+                duration = self.end_time-n_end
+                duration_in_s=duration.total_seconds
+                hours = duration_in_s/3600
+                hours = round(hours,4)
+                energy_consumed=self.avg_power*hours
+                self.row_no = write_db( self.device_id, energy_consumed, n_end, self.end_time)
+            
             self.avg_power = 0
 
         else:
@@ -100,30 +148,7 @@ class Device:
 
 
         
-        # if current_status and self.device_status :
-        #     self.avg_power += power_measured
-        #     self.avg_power /=2
-        # elif current_status == True and self.device_status ==False:
-        #     self.avg_power += power_measured
-        #     self.avg_power /=2
-        #     self.device_status = True
-        #     self.start_time = datetime.datetime.now(pytz.timezone('Asia/Kolkata'))
-        # elif current_status == False and self.device_status ==True:
-        #     self.device_status = False
-        #     self.end_time =  datetime.datetime.now(pytz.timezone('Asia/Kolkata'))
-        #     day_change = False
-        #     if self.end_time.strftime("%d") != self.start_time.strftime("%d"):
-        #         day_change=True
-        #     duration = self.end_time - self.start_time
-        #     duration_in_s = duration.total_seconds()
-        #     hours = duration_in_s/3600
-        #     hours = round(hours,4)
-        #     #write in database the avg power
-        #     self.avg_power = 0
-        # else:
-        #     self.device_status = False
-        #     self.avg_power = 0
-
+        
     
         
 
