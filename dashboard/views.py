@@ -1,15 +1,57 @@
 from django.shortcuts import render
-from .models import Consumption_Data
-import datetime
+from .models import Consumption_Data, Device
+from django.utils import timezone
 # Create your views here.
 def home(request):
-    now = datetime.datetime.now()
-    objs =Consumption_Data.objects.filter(starttime__month=now.month)
-    total_power = 0
-    for o in objs :
-        total_power+=o.energy
+    labels = []
+    data =[]
+    total = 0
+    now = timezone.localtime(timezone.now())
+    devices = Device.objects.all()
 
-    print(total_power)
-    context = {'power':total_power}
-    return render(request, 'dashboard/index.html',context)
+    for device in devices:
+        queryset = Consumption_Data.objects.all()
+        energy_consumed = 0
+        for query in queryset:
+            if query.device_id == device.device_id and query.starttime.month==now.month:
+                print(query.starttime)
+                energy_consumed +=query.energy
+        name = device.device_name
+        labels.append(name)
+        data.append(energy_consumed)
+    total = round(sum(data),4)
+    return render(request, 'dashboard/index.html',{
+        'labels': labels,
+        'data' : data,
+        'total':total
+    })
+
+def day(request):
+    labels = []
+    data =[]
+    total = 0
+    now = timezone.localtime(timezone.now())
+    print(now.day)
+    devices = Device.objects.all()
+
+    for device in devices:
+
+        queryset = Consumption_Data.objects.all()
+        
+        energy_consumed = 0
+        for query in queryset:
+            if query.device_id == device.device_id and query.starttime.day==now.day:
+                print(query.starttime)
+                energy_consumed +=query.energy
+        name = device.device_name
+
+        labels.append(name)
+        data.append(energy_consumed)
+        total = round(sum(data),4)
+    
+    return render(request, 'dashboard/day.html',{
+        'labels': labels,
+        'data' : data,
+        'total':total
+    })
 

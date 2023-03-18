@@ -1,0 +1,111 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        {% block title %}
+
+        {% endblock %}
+    </title>
+    <link rel="stylesheet" href="{% static 'dashboard/css/style_index.css' %}">
+
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar__container">
+            <div id="navbar_logo">
+                SEEMS
+            </div>
+            <div class="navbar__toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+            <ul class="navbar__menu">
+                <li class="navbar__item">
+                    <a href=" {% url 'home' %}" class="navbar__links" id="month-button">
+                        Month
+                    </a>
+                <li class="navbar__item">
+                    <a href="{% url 'home' %}" class="navbar__links" id="week-button">
+                        Week
+                    </a>
+                <li class="navbar__item" >
+                    <a href="{% url 'daily' %}" class="navbar__links" id="day-button">
+                        Day
+                    </a>
+                <li class="navbar__item" >
+                        <div class="navbar__links" id="device-button">
+                            <select name="select" id="device-select">
+                                <option value="all">Entire Household</option>
+                                <option value="Device1">Device 1</option>
+                                <option value="Device2">Device 2</option>
+                                <option value="Device3">Device 3</option>
+                            </select>
+                        </div>
+            </ul>
+        </div>
+    </nav>
+
+    <div id="home-container" class="primary-container">
+        <div id="greeting-name">
+
+            {% block content %}
+           
+
+            {% endblock %}
+            
+             <br>
+             <h2><span id="date"></span></h2>
+             <script>
+                const date = new Date();
+
+            let day = date.getDate();
+            let month = date.getMonth() + 1;
+            let year = date.getFullYear();
+            let currentDate = `${day}-${month}-${year}`;
+
+
+                document.getElementById("date").innerHTML = currentDate;
+             </script>
+                   
+                
+               
+    </div>
+
+    <div class="graphs">
+      <canvas id="pie-chart"></canvas>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+    <script>
+        var config = {
+        type: 'pie',
+        data: {
+            datasets: [{
+            data: {{ data|safe }},
+            backgroundColor: ['#A9A9A9', '#808080',],
+            label: 'Population'
+            }],
+            labels: {{ labels|safe }}
+        },
+        options: {
+            responsive: true
+        }
+        };
+        window.onload = function() {
+        var ctx = document.getElementById('pie-chart').getContext('2d');
+        window.myPie = new Chart(ctx, config);
+        };
+
+  </script>
+
+
+    </div>
+</div>
+</body>
+
+</html>

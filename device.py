@@ -12,7 +12,7 @@ def write_db(dev_id,enrgy,st_time,en_time ):
     a =cursor.lastrowid
     conn.commit()
     cursor.close()
-    print("written, energy: ",enrgy)
+    print(f"written, {enrgy=}, {dev_id=}" )
     return a
 
 def update_row(row_no,dev_id,energy,st_time,en_time):
@@ -24,7 +24,7 @@ def update_row(row_no,dev_id,energy,st_time,en_time):
     a =cursor.lastrowid
     conn.commit()
     cursor.close()
-    print("updated, energy: ",energy)
+    print(f"updated, {energy=}, {dev_id=}")
     return a
 
 class Device:
