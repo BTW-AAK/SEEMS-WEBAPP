@@ -11,45 +11,53 @@
 
         {% endblock %}
     </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'dashboard/css/style_index.css' %}">
 
 </head>
 <body>
-    <nav class="navbar">
-        <div class="navbar__container">
-            <div id="navbar_logo">
-                SEEMS
-            </div>
-            <div class="navbar__toggle" id="mobile-menu">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </div>
-            <ul class="navbar__menu">
-                <li class="navbar__item">
-                    <a href=" {% url 'home' %}" class="navbar__links" id="month-button">
-                        Month
-                    </a>
-                <li class="navbar__item">
-                    <a href="{% url 'home' %}" class="navbar__links" id="week-button">
-                        Week
-                    </a>
-                <li class="navbar__item" >
-                    <a href="{% url 'daily' %}" class="navbar__links" id="day-button">
-                        Day
-                    </a>
-                <li class="navbar__item" >
-                        <div class="navbar__links" id="device-button">
-                            <select name="select" id="device-select">
-                                <option value="all">Entire Household</option>
-                                <option value="Device1">Device 1</option>
-                                <option value="Device2">Device 2</option>
-                                <option value="Device3">Device 3</option>
-                            </select>
-                        </div>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">SEEMS</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href=" {% url 'home' %}">Monthly</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'daily' %}">Daily</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Dropdown
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <li><a class="dropdown-item" href="#"> Entire HouseHold</a></li>
+                  {% for device in devices %}
+                  <li><a class="dropdown-item" href="{% url 'single' device.device_name %}">{{device.device_name}}</a></li>
+                  
+                  {% endfor %}
+                </ul>
+              </li>
+              
             </ul>
+            
+          </div>
         </div>
-    </nav>
+      </nav>
+
+
+
+
+
+
+
+
+
+
 
     <div id="home-container" class="primary-container">
         <div id="greeting-name">
@@ -80,6 +88,7 @@
     <div class="graphs">
       <canvas id="pie-chart"></canvas>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
     <script>
         var config = {
@@ -87,8 +96,8 @@
         data: {
             datasets: [{
             data: {{ data|safe }},
-            backgroundColor: ['#A9A9A9', '#808080',],
-            label: 'Population'
+            backgroundColor: ['#fc1703', '#fcdf03','#7b03fc'],
+            
             }],
             labels: {{ labels|safe }}
         },
@@ -100,6 +109,8 @@
         var ctx = document.getElementById('pie-chart').getContext('2d');
         window.myPie = new Chart(ctx, config);
         };
+
+        
 
   </script>
 
