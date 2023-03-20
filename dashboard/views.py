@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .models import Consumption_Data, Device
 from django.utils import timezone
+from datetime import timedelta
 # Create your views here.
 def home(request):
     labels = []
@@ -67,11 +68,37 @@ def day(request):
         'labels': labels,
         'data' : data,
         'total':total,
-	'devices':devices
+	    'devices':devices
     })
 
 def singular_device_info(request,name):
-	devices = Device.objects.all()
-        
+    devices = Device.objects.all()
+    device = Device.objects.get(device_name = name)
+
+    now = timezone.now()
     
-	return render(request,'dashboard/device.html', {'name':name})
+    energy_used = Consumption_Data.objects.order_by('-starttime').filter(device_id = device.device_id, starttime__gte=now-timedelta(days=7))
+    e = [x.energy for x in energy_used]
+    
+    
+    energy_consumed_on_day ={}
+    for entry in energy_used:
+        date = entry.starttime.strftime("%Y-%m-%d")
+        
+        if date in energy_consumed_on_day:
+            energy_consumed_on_day[date] += entry.energy
+        else:
+            energy_consumed_on_day[date] = entry.energy
+    
+    mx = max(energy_consumed_on_day.items(), key = lambda x: x[1])[1]
+    
+    data = list(energy_consumed_on_day.items())
+    print(data)
+    context = {'name':name,
+               'devices':devices,
+               'mx':mx,
+               'data':data,
+
+    }
+        
+    return render(request,'dashboard/device.html',context)
