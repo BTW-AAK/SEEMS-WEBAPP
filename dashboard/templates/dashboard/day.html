@@ -7,6 +7,9 @@ SEEMS-Today
 {% block content %}
 
 <h1>Today</h1><br><br><h5 class="title-text">Total Energy Consumption: {{total}} kWh</h5>
-
+<form method = 'POST'>
+    {% csrf_token %}
+<input type="date" name ='date'> <input type = "submit" value="Check"> </form>
+<br>
 
 {% endblock %}

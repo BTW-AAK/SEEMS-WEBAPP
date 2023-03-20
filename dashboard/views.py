@@ -27,11 +27,18 @@ def home(request):
     })
 
 def day(request):
+
     labels = []
     data =[]
     total = 0
-    now = timezone.localtime(timezone.now())
-    print(now.day)
+    if request.method =='POST':
+        date = request.POST['date']
+        now = date.split('-')[2]
+    else:
+        
+        now = timezone.localtime(timezone.now())
+        now = now.day
+    print(now)
     devices = Device.objects.all()
 
     for device in devices:
@@ -40,7 +47,7 @@ def day(request):
         
         energy_consumed = 0
         for query in queryset:
-            if query.device_id == device.device_id and query.starttime.day==now.day:
+            if query.device_id == device.device_id and query.starttime.day==now:
                 print(query.starttime)
                 energy_consumed +=query.energy
         name = device.device_name
