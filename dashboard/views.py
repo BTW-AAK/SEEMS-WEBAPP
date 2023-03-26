@@ -91,9 +91,11 @@ def singular_device_info(request,name):
             energy_consumed_on_day[date] += entry.energy
         else:
             energy_consumed_on_day[date] = entry.energy
-    
-    mx = max(energy_consumed_on_day.items(), key = lambda x: x[1])[1]
-    
+    try:
+        mx = max(energy_consumed_on_day.items(), key = lambda x: x[1])[1]
+    except ValueError:
+        print("Cannot find max. sequence empty")
+        
     data = list(energy_consumed_on_day.items())
     print(data)
     context = {'name':name,
