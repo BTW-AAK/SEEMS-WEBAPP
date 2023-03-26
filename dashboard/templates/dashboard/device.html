@@ -1,0 +1,21 @@
+{% extends 'dashboard/base.html' %}
+{% load perc %}
+{% block title %}
+Device
+{% endblock %}
+
+{% block content %}
+
+<h2>{{name}}</h2>
+<div style="height:auto;">
+{% for date,val in data %}
+{{date}} - {{val}} KWh
+<div class="progress">
+    <div class="progress-bar bg-success" role="progressbar" style="width: {{val | percentage:mx}}%" aria-valuenow="{{val}}" aria-valuemin="0" aria-valuemax={{mx}}></div>
+</div>
+<br>
+{% endfor %}
+</div>
+  
+
+{% endblock %}

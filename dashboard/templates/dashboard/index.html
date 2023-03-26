@@ -1,12 +1,12 @@
 {% extends 'dashboard/base.html' %}
-
+{% load perc %}
 {% block title %}
 SEEMS-Monthly
 {% endblock %}
 
-{% block content %}
+{% block headline %}
 
-<h1>Monthly</h1><br><br><h5 class="title-text">Total Energy Consumption: {{total}} kWh</h5>
+<h1>Monthly</h1><br><br><h5 class="title-text">Total Energy Consumption: {{total}} kWh <br> Total Cost: ₹ {{ total | priceModifier }} </h5>
 
 
 {% endblock %}

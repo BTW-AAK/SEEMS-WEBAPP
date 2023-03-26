@@ -1,12 +1,16 @@
 {% extends 'dashboard/base.html' %}
-
+{% load perc %}
 {% block title %}
 SEEMS-Today
 {% endblock %}
 
-{% block content %}
+{% block headline %}
 
-<h1>Today</h1><br><br><h5 class="title-text">Total Energy Consumption: {{total}} kWh</h5>
+<h1>Today</h1><br><br><h5 class="title-text">Total Energy Consumption: {{total}} kWh  <br> Total Cost: ₹ {{ total | priceModifier }}</h5>
 
+<form method = 'POST'>
+    {% csrf_token %}
+<input type="date" name ='date' value= ''> <input type = "submit" value="Check"> </form>
+<br>
 
 {% endblock %}
