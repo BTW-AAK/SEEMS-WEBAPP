@@ -8,3 +8,9 @@ def percentage(value, arg):
         return 0
     
     return (value / arg)*100
+
+@register.filter(name='priceModifier')
+def priceModifier(value):
+    
+
+    return (value*6)

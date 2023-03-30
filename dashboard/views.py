@@ -68,7 +68,7 @@ def day(request):
         'labels': labels,
         'data' : data,
         'total':total,
-	    'devices':devices
+	    'devices':devices,
     })
 
 def singular_device_info(request,name):
@@ -89,8 +89,10 @@ def singular_device_info(request,name):
             energy_consumed_on_day[date] += entry.energy
         else:
             energy_consumed_on_day[date] = entry.energy
-    
-    mx = max(energy_consumed_on_day.items(), key = lambda x: x[1])[1]
+    try:
+        mx = max(energy_consumed_on_day.items(), key = lambda x: x[1])[1]
+    except ValueError:
+        mx =0
     
     data = list(energy_consumed_on_day.items())
     print(data)
@@ -102,3 +104,6 @@ def singular_device_info(request,name):
     }
         
     return render(request,'dashboard/device.html',context)
+
+def aboutus(request):
+    return render(request, 'dashboard/aboutus.html')
