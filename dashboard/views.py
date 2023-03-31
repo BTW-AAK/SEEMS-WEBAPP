@@ -48,6 +48,12 @@ def day(request):
     print(now)
     devices = Device.objects.all()
 
+    if now == 1:
+        print("April")
+        month = 4
+    else:
+        month = 3
+
     for device in devices:
 
         queryset = Consumption_Data.objects.all()
@@ -63,12 +69,13 @@ def day(request):
         labels.append(name)
         data.append(energy_consumed)
         total = round(sum(data),4)
-    
     return render(request, 'dashboard/day.html',{
         'labels': labels,
         'data' : data,
         'total':total,
 	    'devices':devices,
+        'date':now,
+        'month':month
     })
 
 def singular_device_info(request,name):

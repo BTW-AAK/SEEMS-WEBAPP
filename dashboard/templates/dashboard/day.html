@@ -11,22 +11,7 @@ SEEMS-Today
     {% csrf_token %}
 <input type="date" name ='date' value= '' id="dateInput"> <input type = "submit" value="Check" id="date-submit"> </form>
 <br>
-<h2><span id="date"></span></h2>
-<script>
-    var dateSubmitButton = document.querySelector("#date-submit")
-    dateSubmitButton.addEventListener('click', function(event){
-var input = document.getElementById("dateInput").value;
-var dateEntered = new Date(input);
-            let day = dateEntered.getDate();
-            let month = dateEntered.getMonth() + 1;
-            let year = dateEntered.getFullYear();
-            let currentDate = `${day}-${month}-${year}`;
-
-
-                document.getElementById("date").innerHTML = currentDate;
-    })
-    document.getElementById("date").innerHTML = currentDate;
-</script>
+<h2 id="date">{{date}}/{{month}}/23</h2>
 <br>
 
 {% endblock %}

@@ -11,6 +11,6 @@ def percentage(value, arg):
 
 @register.filter(name='priceModifier')
 def priceModifier(value):
-    
 
-    return (value*6)
+
+    return round(value*6,4)
